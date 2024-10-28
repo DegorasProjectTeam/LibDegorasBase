@@ -47,6 +47,7 @@
 #include "LibDegorasBase/Statistics/measures.h"
 #include "LibDegorasBase/Mathematics/types/matrix.h"
 #include "LibDegorasBase/Mathematics/types/vector3d.h"
+#include "LibDegorasBase/Mathematics/operators/operators.h"
 #include "LibDegorasBase/Helpers/type_traits.h"
 // =====================================================================================================================
 
@@ -149,12 +150,14 @@ template <typename T, typename Ret>
 std::vector<Ret> robustBisquareWeights(const std::vector<T>& x, const std::vector<T>& y, const std::vector<T>& yc,
                                        const double K)
 {
+    using namespace dpbase::math::operators;
+
     auto leverages = measures::leverage(x);
     auto resids = y - yc;
     decltype(resids) resids_abs;
     std::transform(resids.begin(), resids.end(), std::back_inserter(resids_abs), [](const auto& v){return std::abs(v);});
     // Median absoulte deviation.
-    long double mad = median(resids_abs);
+    long double mad = measures::median(resids_abs);
     // For the standard normal E(MAD)=0.6745
     long double s = mad/0.6745L;
     long double Ks = static_cast<long double>(K)*s;
@@ -286,7 +289,7 @@ std::vector<Ret> polynomialFit(const std::vector<T>& x, const std::vector<T>& y,
                            [&coefs](const auto& xi){return applyPolynomial(coefs, xi);});
 
             // Compute bisquare weights
-            calc_weights = computeBisquareWeights(x, y,  y_c);
+            calc_weights = robustBisquareWeights(x, y,  y_c);
 
             // Redo fit with new weights and check if they converged
             prev_coefs = std::move(coefs);
