@@ -45,7 +45,7 @@
 
 // LIBRARY INCLUDES
 // =====================================================================================================================
-#include "LibDegorasBase/Statistics/common/statistics_types.h"
+#include "LibDegorasBase/Statistics/types/statistics_types.h"
 // =====================================================================================================================
 
 // DPBASE NAMESPACES
@@ -55,13 +55,13 @@ namespace stats{
 // =====================================================================================================================
 
 template <typename C>
-HistCountRes<C> histcounts1D(const C& data)
+types::HistCountRes<C> histcounts1D(const C& data)
 {
     // TODO. AUTOMATIC BINDING ALGORITHM (SCOTT).
 }
 
 template <typename C>
-HistCountRes<C> histcounts1D(const C& data, size_t nbins, typename C::value_type min_edge,
+types::HistCountRes<C> histcounts1D(const C& data, size_t nbins, typename C::value_type min_edge,
                              typename C::value_type max_edge)
 {
     // Convenient alias.
@@ -92,7 +92,7 @@ HistCountRes<C> histcounts1D(const C& data, size_t nbins, typename C::value_type
 }
 
 template <typename C>
-HistCountRes<C> histcounts1D(const C& data, size_t nbins)
+types::HistCountRes<C> histcounts1D(const C& data, size_t nbins)
 {
     // Convenient alias.
     using ConType = typename C::value_type;
@@ -149,21 +149,20 @@ unsigned countBin(const Container& container, T min,T max, bool exmin = false, b
 
     // Count the values.
     unsigned counter = std::count_if(container.begin(), container.end(),
-                                     [&min, &max, &exmin, &exmax](const ConType& i)
-                                     {
-                                         // TODO Floating comparation?
-                                         bool result;
-                                         if(exmin && exmax)
-                                             result = (i > min) && (i < max);
-                                         else if(exmin && !exmax)
-                                             result = (i > min) && (i <= max);
+    [&min, &max, &exmin, &exmax](const ConType& i)
+    {
+        bool result;
+        if(exmin && exmax)
+            result = (i > min) && (i < max);
+        else if(exmin && !exmax)
+            result = (i > min) && (i <= max);
 
-                                         else if(!exmin && exmax)
-                                             result = (i >= min) && (i < max);
-                                         else
-                                             result = (i >= min) && (i <= max);
-                                         return result;
-                                     });
+        else if(!exmin && exmax)
+            result = (i >= min) && (i < max);
+        else
+            result = (i >= min) && (i <= max);
+        return result;
+    });
     // Return the result.
     return counter;
 }
