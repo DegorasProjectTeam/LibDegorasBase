@@ -310,12 +310,16 @@ HRTimePointStd iso8601DatetimeToTimePoint(const std::string& datetime) {
         long long fractional_seconds = std::stoll(fractional_seconds_str);
         size_t length = fractional_seconds_str.length();
 
-        if (length <= 3)
+        if (length == 1) // Normalize to milliseconds
+            t += std::chrono::milliseconds(fractional_seconds * 100);
+        else if (length == 2) // Normalize to milliseconds
+            t += std::chrono::milliseconds(fractional_seconds * 10);
+        else if (length == 3) // Already in milliseconds
             t += std::chrono::milliseconds(fractional_seconds);
-        else if (length <= 6)
-            t += std::chrono::microseconds(fractional_seconds);
-        else
-            t += std::chrono::nanoseconds(fractional_seconds);
+        else if (length <= 6) // Normalize to microseconds
+            t += std::chrono::microseconds(fractional_seconds * static_cast<long long>(std::pow(10, 6 - length)));
+        else // Normalize to nanoseconds
+            t += std::chrono::nanoseconds(fractional_seconds * static_cast<long long>(std::pow(10, 9 - length)));
     }
 
     if (!is_utc) {
