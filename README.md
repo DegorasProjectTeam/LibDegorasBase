@@ -26,5 +26,5 @@ Infrastructure and utilities base library for C++-based projects. Used in the re
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [cplusplus-shield]: https://img.shields.io/badge/-C++17-black?style=for-the-badge&logo=cplusplus&colorB=555
 [cplusplus-url]: https://en.cppreference.com/w/cpp/17
-[license-shield]: https://img.shields.io/badge/MIT%201.2-green.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/badge/MIT-green.svg?style=for-the-badge
 [license-url]: https://mit-license.org/
