@@ -16,7 +16,7 @@ Infrastructure and utilities base library for C++-based projects. Used in the re
 * [Royal Institute and Observatory of the Spanish Navy (San Fernando, Spain)](https://armada.defensa.gob.es/ArmadaPortal/page/Portal/ArmadaEspannola/cienciaobservatorio/prefLang-es/)
 * [International Laser Ranging Service](https://ilrs.gsfc.nasa.gov/)
 * [Naval Observatory Vector Astrometry Software (NOVAS) Version 3.1](https://aa.usno.navy.mil/software/novas_info)
-* [The MIT License](https://mit-license.org/)
+* [The MIT License](https://opensource.org/license/mit/)
 * [Shields](https://shields.io)
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 
@@ -27,4 +27,4 @@ Infrastructure and utilities base library for C++-based projects. Used in the re
 [cplusplus-shield]: https://img.shields.io/badge/-C++17-black?style=for-the-badge&logo=cplusplus&colorB=555
 [cplusplus-url]: https://en.cppreference.com/w/cpp/17
 [license-shield]: https://img.shields.io/badge/MIT-green.svg?style=for-the-badge
-[license-url]: https://mit-license.org/
+[license-url]: https://opensource.org/license/mit/
