@@ -27,7 +27,7 @@
 # **********************************************************************************************************************
 
 # **********************************************************************************************************************
-# Updated 15/10/2024
+# Updated 10/11/2025
 # **********************************************************************************************************************
 
 # **********************************************************************************************************************
@@ -44,8 +44,8 @@ project(_)
 # Set path to additional CMake modules.
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
-    ${CMAKE_SOURCE_DIR}/CMakeModules
-    ${CMAKE_SOURCE_DIR}/CMakeLibsConfig)
+    ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules
+    ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLibsConfig)
 
 # Init CMake modules.
 include(CMakeMacrosGlobals)
@@ -57,9 +57,9 @@ macro_cmakemodules_init()
 # Base project configuration.
 set(LIB_NAME LibDegorasBase)
 set(LIB_VER 1.0.1)
-set(LIB_BUILD_MODE Debug)
-set(LIB_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../${LIB_NAME}_product_v${LIB_VER})
-set(LIB_LANGUAGES CXX C)
+set(LIB_BUILD_MODE ${CMAKE_BUILD_TYPE})
+set(LIB_INSTALL_DIR ${CMAKE_INSTALL_PREFIX}/${LIB_NAME}_product_v${LIB_VER})
+set(LIB_LANGUAGES CXX)
 
 # Macros global configuration.
 macro_global_set_show_externals(FALSE)
@@ -85,19 +85,19 @@ macro_setup_default_install_dir(${LIB_INSTALL_DIR})
 # Specific configuration.
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG TRUE)
 set(LIB_INCLUDES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes/)
-set(LIB_SOURCES_DIR ${CMAKE_SOURCE_DIR}/sources)
+set(LIB_SOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/sources)
 
 # ----------------------------------------------------------------------------------------------------------------------
 # SETUP THE SHARED LIBRARY
 
 # Get the headers, sources and template files.
-file(GLOB_RECURSE HEADERS ${CMAKE_SOURCE_DIR}/includes/${LIB_NAME}/*.h)
-file(GLOB_RECURSE TEMPLTS ${CMAKE_SOURCE_DIR}/includes/${LIB_NAME}/*.tpp)
-file(GLOB_RECURSE INL ${CMAKE_SOURCE_DIR}/includes/${LIB_NAME}/*.inl)
-file(GLOB_RECURSE SOURCES1 ${CMAKE_SOURCE_DIR}/sources/*.cpp)
+file(GLOB_RECURSE HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/includes/${LIB_NAME}/*.h)
+file(GLOB_RECURSE TEMPLTS ${CMAKE_CURRENT_SOURCE_DIR}/includes/${LIB_NAME}/*.tpp)
+file(GLOB_RECURSE INL ${CMAKE_CURRENT_SOURCE_DIR}/includes/${LIB_NAME}/*.inl)
+file(GLOB_RECURSE SOURCES1 ${CMAKE_CURRENT_SOURCE_DIR}/sources/*.cpp)
 
 # Get the include aliases files.
-macro_get_files_without_extension(ALIAS ${CMAKE_SOURCE_DIR}/includes/${LIB_NAME}/*)
+macro_get_files_without_extension(ALIAS ${CMAKE_CURRENT_SOURCE_DIR}/includes/${LIB_NAME}/*)
 
 # Create a custom group for the templates and aliases.
 source_group("Header Files" FILES ${TEMPLTS})
