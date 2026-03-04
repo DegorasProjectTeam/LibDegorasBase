@@ -2,9 +2,9 @@
 #include <cassert>
 #include <iostream>
 
-#include <LibDegorasBase/Mathematics/Matrix>
+#include <LibDegorasBase/Mathematics/types/matrix.h>
 
-using dpbase::math::Matrix;
+using dpbase::math::types::Matrix;
 
 void testMatrixIdentity()
 {

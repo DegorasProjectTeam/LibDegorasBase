@@ -47,7 +47,6 @@
 #include <utility>
 #include <cmath>
 #include <omp.h>
-#include <string.h>
 // =====================================================================================================================
 
 // LIBRARY INCLUDES
@@ -297,8 +296,7 @@ public:
      *
      * @warning This rotation is only suitable for floating point types.
      */
-    typename std::enable_if_t<helpers::traits::is_floating_v<T>, void>
-    euclidian3DRotation(unsigned axis, const math::units::Radians& angle);
+    void euclidian3DRotation(unsigned axis, const math::units::Radians& angle);
 
     /**
      * @brief Multiply by scalar operator.

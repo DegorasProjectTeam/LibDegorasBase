@@ -40,7 +40,6 @@
 #include <cstddef>
 #include <algorithm>
 #include <omp.h>
-#include <math.h>
 // =====================================================================================================================
 
 // LIBRARY INCLUDES
@@ -248,7 +247,7 @@ template <typename T>
 std::enable_if_t<std::is_swappable_v<T>, bool>
 Matrix<T>::swapRows(std::size_t r1, std::size_t r2)
 {
-    bool rows_valid = r1 < this->rowSize() && r1 >= 0 && r2 < this->rowSize() && r2 >= 0;
+    bool rows_valid = (r1 < this->rowSize()) && (r2 < this->rowSize());
     if (rows_valid)
         std::swap(this->data_[r1], this->data_[r2]);
     return rows_valid;
@@ -258,9 +257,9 @@ template <typename T>
 std::enable_if_t<std::is_swappable_v<T>, bool>
 Matrix<T>::swapColumns(std::size_t c1, std::size_t c2)
 {
-    bool cols_valid = c1 < this->columnsSize() && c1 >= 0 && c2 < this->columnsSize() && c2 >= 0;
+    bool cols_valid = (c1 < this->columnsSize()) && (c2 < this->columnsSize());
     if (cols_valid)
-        for (const auto& row : this->data_)
+        for (auto& row : this->data_)
             std::swap(row[c1], row[c2]);
     return cols_valid;
 }
@@ -268,35 +267,21 @@ Matrix<T>::swapColumns(std::size_t c1, std::size_t c2)
 template <typename T>
 Matrix<T> Matrix<T>::transpose() const
 {
-    // Create a new matrix with swapped dimensions.
-    Matrix<T> result(this->columnsSize(), this->rowSize(), 0);
+    const std::size_t m = this->rowSize();
+    const std::size_t n = this->columnsSize();
 
-    // Transpose elements in parallel using OpenMP.
-    omp_set_num_threads(omp_get_max_threads());
-    #pragma omp parallel
+    Matrix<T> result(n, m, static_cast<T>(0));
+
+    #pragma omp parallel for collapse(2) schedule(static)
+    for (std::ptrdiff_t i = 0; i < static_cast<std::ptrdiff_t>(m); ++i)
     {
-        // Get data from omp.
-        const size_t n_th = static_cast<size_t>(omp_get_num_threads());
-        const size_t th_id = static_cast<size_t>(omp_get_thread_num());
-        const size_t block_size = this->rowSize() / n_th;
-        const size_t start_idx = th_id * block_size;
-        const size_t end_idx = (th_id == n_th - 1) ? this->rowSize() : start_idx + block_size;
-
-        // Private transpose.
-        Matrix<T> priv_res(columnsSize(), rowSize(), 0);
-
-        for (size_t i = start_idx; i < end_idx; i++)
-            for (size_t j = 0; j < this->columnsSize(); j++)
-                priv_res[j][i] = data_[i][j];
-
-                // Update the result.
-        #pragma omp critical
+        for (std::ptrdiff_t j = 0; j < static_cast<std::ptrdiff_t>(n); ++j)
         {
-            result += priv_res;
+            result.data_[static_cast<std::size_t>(j)][static_cast<std::size_t>(i)] =
+                this->data_[static_cast<std::size_t>(i)][static_cast<std::size_t>(j)];
         }
     }
 
-    // Return the transpose matrix.
     return result;
 }
 
@@ -358,7 +343,6 @@ template <typename U>
 Matrix<T>& Matrix<T>::operator *=(const Matrix<U>& B)
 {
     return *this = *this * B;
-    return *this;
 }
 
 template <typename T>
@@ -589,9 +573,11 @@ Matrix<T> Matrix<T>::fromRowVector(const std::vector<T>& row)
 }
 
 template <typename T>
-std::enable_if_t<helpers::traits::is_floating_v<T>, void>
-Matrix<T>::euclidian3DRotation(unsigned axis, const math::units::Radians& angle)
+void Matrix<T>::euclidian3DRotation(unsigned axis, const math::units::Radians& angle)
 {
+    static_assert(helpers::traits::is_floating_v<T>,
+                  "Matrix<T>::euclidian3DRotation requires T to be floating-point (or strong-floating).");
+
     // Checks.
     if (axis < 1)
     {

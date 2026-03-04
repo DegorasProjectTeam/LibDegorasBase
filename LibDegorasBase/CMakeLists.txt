@@ -44,8 +44,8 @@ project(_)
 # Set path to additional CMake modules.
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
-    ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules
-    ${CMAKE_CURRENT_SOURCE_DIR}/CMakeLibsConfig)
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/config)
 
 # Init CMake modules.
 include(CMakeMacrosGlobals)
