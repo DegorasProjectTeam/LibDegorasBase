@@ -47,6 +47,7 @@
 #include <utility>
 #include <cmath>
 #include <omp.h>
+#include <optional>
 // =====================================================================================================================
 
 // LIBRARY INCLUDES
@@ -159,6 +160,49 @@ public:
     bool isSquare() const;
 
     /**
+     * @brief Checks if the matrix is Hermitian.
+     * @return True if the matrix is Hermitian, false otherwise.
+     */
+    bool isHermitian() const;
+
+    /**
+     * @brief Calculate the signature of a matrix.
+     * @return -2 if the matrix is negative definite, -1 if is negative semidefinite, 0 if is indefinite,
+     * if is positive semidefinite, 2 if is positive definite and 10 if isn't square and doesn't signature.
+     */
+    int signature() const;
+
+    /**
+     * @brief Checks if the matrix is positive definite.
+     * @return True if the matrix is positive definite, false otherwise.
+     */
+    bool isPositiveDefinite() const;
+
+    /**
+     * @brief Checks if the matrix is negative definite.
+     * @return True if the matrix is negative definite, false otherwise.
+     */
+    bool isNegativeDefinite() const;
+
+    /**
+     * @brief Checks if the matrix is positive semidefinite.
+     * @return True if the matrix is positive semidefinite, false otherwise.
+     */
+    bool isPositiveSemidefinite() const;
+
+    /**
+     * @brief Checks if the matrix is negative semidefinite.
+     * @return True if the matrix is negative semidefinitee, false otherwise.
+     */
+    bool isNegativeSemidefinite() const;
+
+    /**
+     * @brief Checks if the matrix is indefinite.
+     * @return True if the matrix is indefinite, false otherwise.
+     */
+    bool isIndefinite() const;
+
+    /**
      * @brief Checks if the matrix is empty.
      * @return True if the matrix is empty, false otherwise.
      */
@@ -264,6 +308,65 @@ public:
     std::enable_if_t<std::is_swappable_v<T>, bool>
     swapColumns(std::size_t c1, std::size_t c2);
 
+
+    /**
+     * @brief Eliminate one row of the matrix.
+     * @param row The row index of the row to eliminate.
+     * @return The matrix without the row.
+     * @note This function is safe. It will fail if indexes are not valid.
+     */
+    Matrix<T> eliminateRow(std::size_t row) const;
+
+    /**
+     * @brief Eliminate one column of the matrix.
+     * @param col The column index of the column to eliminate.
+     * @return The matrix without the column.
+     * @note This function is safe. It will fail if indexes are not valid.
+     */
+    Matrix<T> eliminateCol(std::size_t col) const;
+
+    /**
+     * @brief Search the row with the maximun number of zeros in the matrix.
+     * @return The index of the optimal row and the number of zeros in this row.
+     */
+    std::pair<std::size_t,std::size_t> pivotRow() const;
+
+    /**
+     * @brief Search the column with the maximun number of zeros in the matrix.
+     * @return The index of the optimal column and the number of zeros in this column.
+     */
+    std::pair<std::size_t,std::size_t> pivotCol() const;
+
+    /**
+     * @brief Calculate the adjoint matrix of the matrix row and column.
+     * @param row The row index of the row.
+     * @param col The column index of the column.
+     * @return The adjoint matrix.
+     * @note This function is safe. It will fail if indexes are not valid.
+     */
+    Matrix<T> adjoint(std::size_t row,std::size_t col) const;
+
+
+    /**
+     * @brief Calculate the determinant of a square matrix using the LU descomposition.
+     * @return The determinant of matrix.
+     * @note This function isn't safe. It won't fail if the matrix isn't square.
+     */
+    long double determinant() const;
+
+    /**
+     * @brief Calculate the determinant of a square matrix using the gaussian elimination.
+     * @return The determinant of matrix.
+     * @note This function isn't safe. It won't fail if the matrix isn't square.
+     */
+    long double detGauss() const;
+
+    /**
+     * @brief Calculate the norm 1 of a matrix.
+     * @return The norm 1 of matrix.
+     */
+    long double norm1() const;
+
     /**
      * @brief Transposes the matrix.
      * @return Transposed matrix.
@@ -271,7 +374,13 @@ public:
     Matrix<T> transpose() const;
 
     /**
-     * @brief Calculates the inverse of a square matrix using Cholesky decomposition.
+     * @brief Diagonalize the matrix with the Gaussian elimination method.
+     * @return The diagonal matrix.
+     */
+    Matrix<T> GaussianElimination() const;
+
+    /**
+     * @brief Calculates the inverse of a square matrix using LU decomposition with partial pivot method.
      * @note The matrix must be square and positive definite for the inverse to exist.
      * @return The inverse matrix if it exists, otherwise an empty matrix.
      */
@@ -281,6 +390,26 @@ public:
 
     static Matrix<long double> solveLU(const Matrix<long double>& LU, const std::vector<size_t>& pivot,
                                        const std::vector<long double>& b);
+
+    /**
+     * @brief Calculates the inverse of a square hermitian matrix using Cholesky method with only
+     *         upper triangle matrix.
+     * @note The matrix must be square, hermitian and positive definite for the inverse to exist.
+     *       The function give 0 if the inverse matrix is sucesfully calculated and 1
+     *       if have a problem in the calculation.
+     * @return 0 and the inverse matrix if it exists, otherwise 1 and an empty matrix.
+     */
+
+    std::pair<int,Matrix<long double>> invCholesky() const;
+
+    /**
+     * @brief Calculates the inverse of a square matrix using Adjoint method.
+     * @note The matrix must be square and its dimentsion less than 7, this restricction
+     * serves to to speed up the calculation process.
+     * @return The inverse matrix if it exists and the restriction is met, otherwise an empty matrix.
+     */
+
+    Matrix<long double> invAdjoint() const;
 
     /**
      * @brief Performs a 3D Euclidean rotation on the matrix.

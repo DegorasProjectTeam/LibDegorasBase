@@ -114,25 +114,21 @@
 
     {
       "name": "ide-dp-mingw-dynamic-deb",
-      "hidden": true,
       "inherits": ["ide-dp-mingw", "dp-dynamic-deb"]
     },
 
     {
       "name": "ide-dp-mingw-dynamic-rel",
-      "hidden": true,
       "inherits": ["ide-dp-mingw", "dp-dynamic-rel"]
     },
 
     {
       "name": "ide-dp-mingw-static-deb",
-      "hidden": true,
       "inherits": ["ide-dp-mingw", "dp-static-deb"]
     },
 
     {
       "name": "ide-dp-mingw-static-rel",
-      "hidden": true,
       "inherits": ["ide-dp-mingw", "dp-static-rel"]
     }
   ],
@@ -141,56 +137,48 @@
     {
       "name": "dp-dynamic-deb",
       "configurePreset": "dp-dynamic-deb",
-      "jobs": 0,
       "verbose": true
     },
 
     {
       "name": "dp-dynamic-rel",
       "configurePreset": "dp-dynamic-rel",
-      "jobs": 0,
       "verbose": true
     },
 
     {
       "name": "dp-static-deb",
       "configurePreset": "dp-static-deb",
-      "jobs": 0,
       "verbose": true
     },
 
     {
       "name": "dp-static-rel",
       "configurePreset": "dp-static-rel",
-      "jobs": 0,
       "verbose": true
     },
 
     {
       "name": "dp-mingw-dynamic-deb",
       "configurePreset": "dp-mingw-dynamic-deb",
-      "jobs": 0,
       "verbose": true
     },
 
     {
       "name": "dp-mingw-dynamic-rel",
       "configurePreset": "dp-mingw-dynamic-rel",
-      "jobs": 0,
       "verbose": true
     },
 
     {
       "name": "dp-mingw-static-deb",
       "configurePreset": "dp-mingw-static-deb",
-      "jobs": 0,
       "verbose": true
     },
 
     {
       "name": "dp-mingw-static-rel",
       "configurePreset": "dp-mingw-static-rel",
-      "jobs": 0,
       "verbose": true
     }
   ]

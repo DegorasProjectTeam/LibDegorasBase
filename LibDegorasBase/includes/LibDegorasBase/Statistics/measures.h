@@ -40,6 +40,7 @@
 #include <numeric>
 #include <algorithm>
 #include <vector>
+#include <string>
 // =====================================================================================================================
 
 // LIBRARY INCLUDES
@@ -233,6 +234,150 @@ std::vector<Ret> leverage(const std::vector<T>& x)
     std::transform(leverage_v.begin(), leverage_v.end(), leverage_v.begin(),
                    [devsqr, n_inv](const auto& e){return n_inv + (e*e / devsqr);});
     return leverage_v;
+}
+
+/**
+ * @brief Calculates the discrete linear convolution of two one-dimensional sequences.
+ * @param v1, The first vector.
+ * @param v2, The second vector.
+ * @param mode, The method using to calculate the convolution the modes are full, same or valid.
+ * @note The predeterminate mode is full.
+ * @return A vector with the convolution.
+ */
+std::vector<long double> convolve(const std::vector<long double>& a, const std::vector<long double>& b, std::string mode)
+{
+    // If no mode is given assign the full mode
+    if(mode=="")
+    {
+        mode = "full";
+    }
+
+    // Initialize the vectors
+    std::vector<long double> signal;
+    std::vector<long double> kernel;
+    // Assign the vectors
+    if(a.size() >= b.size())
+    {
+        signal = a;
+        kernel = b;
+    }
+    else
+    {
+        signal = b;
+        kernel = a;
+    }
+
+    // Assing the size of vectors
+    int M = signal.size();
+    int N = kernel.size();
+    int s = M + N - 1;
+    // Initialize the convolutions vectors
+    std::vector<long double> full;
+    std::vector<long double> valid;
+    std::vector<long double> same;
+
+    // Perforn the calculation of 'full' an 'valid' convolution vectors
+    for(int n = 0; n < s; n++)
+    {
+        long double sum = 0;
+        int count = 0;
+
+        for(int m = 0; m < M; m++)
+        {
+            if(n-m >= 0 && n-m < N)
+            {
+                sum += signal[m] * kernel[n-m];
+                count++;
+            }
+        }
+        full.push_back(sum);
+        // Check if the element is valid
+        if(count == N)
+        {
+            valid.push_back(sum);
+        }
+    }
+    // Check the selected method
+    if(mode == "full")
+    {
+        return full;
+    }
+    else if(mode == "valid")
+    {
+        return valid;
+    }
+    else if(mode == "same")
+    {
+        // Perform the calculation of 'same' convolution vector
+        std::size_t clipper = std::floor((s - M)/2);
+
+        for(int i = 0; i < M; i++)
+        {
+            same.push_back(full[i + clipper]);
+        }
+        return same;
+    }
+    // If an invalid mode is given show an error and return an empty vector
+    std::cout<<mode<<" is not a valid mode, the valid modes are full, same or valid"<<std::endl<<std::endl;
+    return same;
+}
+
+std::size_t argmax(std::vector<long double> v)
+{
+    long double M = *std::max_element(v.begin(), v.end());
+    std::size_t arg;
+    for(std::size_t i = 0; i < v.size(); i++)
+    {
+        if(v[i]==M)
+        {
+            arg = i;
+            break;
+        }
+    }
+    return arg;
+}
+
+std::size_t argmin(std::vector<long double> v)
+{
+    long double m = *std::min_element(v.begin(), v.end());
+    std::size_t arg;
+    for(std::size_t i = 0; i < v.size(); i++)
+    {
+        if(v[i]==m)
+        {
+            arg = i;
+            break;
+        }
+    }
+    return arg;
+}
+
+std::vector<std::size_t> argsmax(std::vector<long double> v)
+{
+    long double M = *std::max_element(v.begin(), v.end());
+    std::vector<std::size_t> arg;
+    for(std::size_t i = 0; i < v.size(); i++)
+    {
+        if(v[i]==M)
+        {
+            arg.push_back(i);
+        }
+    }
+    return arg;
+}
+
+std::vector<std::size_t> argsmin(std::vector<long double> v)
+{
+    long double m = *std::min_element(v.begin(), v.end());
+    std::vector<std::size_t> arg;
+    for(std::size_t i = 0; i < v.size(); i++)
+    {
+        if(v[i]==m)
+        {
+            arg.push_back(i);
+        }
+    }
+    return arg;
 }
 
 }}} // END NAMESPACES.
