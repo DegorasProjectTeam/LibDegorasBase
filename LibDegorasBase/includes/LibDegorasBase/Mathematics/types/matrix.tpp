@@ -43,6 +43,7 @@
 #include <numeric>
 #include <cmath>
 #include <optional>
+#include <string>
 // =====================================================================================================================
 
 // LIBRARY INCLUDES
@@ -1175,6 +1176,39 @@ void Matrix<T>::euclidian3DRotation(unsigned axis, const math::units::Radians& a
     *this *= rotation;
 }
 
+template <typename T>
+template <typename U>
+bool Matrix<T>::same(Matrix<U> M,long double tol) const
+{
+    // Assign the dimensions of matrix
+    std::size_t n = M.rowSize();
+    std::size_t m = M.columnsSize();
+
+    // Check the trival cases, empty matrices and diferent dimensions matrices
+    if((*this).rowSize() != n || (*this).columnsSize() != m)
+    {
+        return false;
+    }
+
+    if((*this).isEmpty() && M.isEmpty())
+    {
+        return true;
+    }
+
+    // Perdorm the comparation
+    for(std::size_t i = 0; i < n; i++)
+    {
+        for(std::size_t j = 0; j < m; j++)
+        {
+            if(std::abs((*this)[i][j] - M[i][j]) > tol)
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 // BUG SI LOS TIPOS SON DIFERENTES COMO COÑO DECIDE EL COMPARE QUE UTILIZAR...
 // A ESTO HAY QUE DARLE UNA VUELTA
 // PD: Paralelizar
@@ -1193,16 +1227,25 @@ bool operator==(const Matrix<T>& A, const Matrix<U>& B)
 
     // Check element-wise equality
     for (size_t i = 0; i < A.rowSize() && res; ++i)
+    {
         for (size_t j = 0; j < A.columnsSize() && res; ++j)
         {
             // BUG Checking issue
-            T aux1 = A(i, j);
-            T aux2 = B(i, j);
+            // T aux1 = A(i, j);
+            // T aux2 = B(i, j);
             T aux3 = A.getElement(i, j);
             T aux4 = B.getElement(i, j);
             if(math::compareFloating(aux3, aux4) != 0)
+            {
                 res = false;
+            }
         }
+    }
+
+    if(!res)
+    {
+        res = A.same(B,1e-12);
+    }
 
     return res;
 }

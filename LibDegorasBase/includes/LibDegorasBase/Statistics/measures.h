@@ -244,7 +244,8 @@ std::vector<Ret> leverage(const std::vector<T>& x)
  * @note The predeterminate mode is full.
  * @return A vector with the convolution.
  */
-std::vector<long double> convolve(const std::vector<long double>& a, const std::vector<long double>& b, std::string mode)
+template <typename T>
+std::vector<T> convolve(const std::vector<T>& a, const std::vector<T>& b, std::string mode)
 {
     // If no mode is given assign the full mode
     if(mode=="")
@@ -322,10 +323,18 @@ std::vector<long double> convolve(const std::vector<long double>& a, const std::
     return same;
 }
 
-std::size_t argmax(std::vector<long double> v)
+/**
+ * @brief Find the first argument/index of the maximun value in a vector.
+ * @param v, the vector.
+ * @return The first index of maximun value.
+ */
+template <typename T>
+std::size_t argmax(std::vector<T>& v)
 {
+    // Assign the maximun value
     long double M = *std::max_element(v.begin(), v.end());
     std::size_t arg;
+    // Find the first index of maximun value
     for(std::size_t i = 0; i < v.size(); i++)
     {
         if(v[i]==M)
@@ -337,10 +346,18 @@ std::size_t argmax(std::vector<long double> v)
     return arg;
 }
 
-std::size_t argmin(std::vector<long double> v)
+/**
+ * @brief Find the first argument/index of the minimun value in a vector.
+ * @param v, the vector.
+ * @return The first index of minimun value.
+ */
+template <typename T>
+std::size_t argmin(std::vector<T>& v)
 {
+    // Assign the minimun value
     long double m = *std::min_element(v.begin(), v.end());
     std::size_t arg;
+    // Find the first index of minimun value
     for(std::size_t i = 0; i < v.size(); i++)
     {
         if(v[i]==m)
@@ -352,10 +369,18 @@ std::size_t argmin(std::vector<long double> v)
     return arg;
 }
 
-std::vector<std::size_t> argsmax(std::vector<long double> v)
+/**
+ * @brief Find all arguments/indexes of the maximun value in a vector.
+ * @param v, the vector.
+ * @return A vector with all indexes of maximun value.
+ */
+template <typename T>
+std::vector<std::size_t> argsmax(std::vector<T>& v)
 {
+    // Assign the maximun value
     long double M = *std::max_element(v.begin(), v.end());
     std::vector<std::size_t> arg;
+    // Find all indexes of maximun value
     for(std::size_t i = 0; i < v.size(); i++)
     {
         if(v[i]==M)
@@ -366,10 +391,18 @@ std::vector<std::size_t> argsmax(std::vector<long double> v)
     return arg;
 }
 
-std::vector<std::size_t> argsmin(std::vector<long double> v)
+/**
+ * @brief Find all arguments/indexes of the minimun value in a vector.
+ * @param v, the vector.
+ * @return A vector with all indexes of minimun value.
+ */
+template <typename T>
+std::vector<std::size_t> argsmin(std::vector<T>& v)
 {
+    // Assign the minimun value
     long double m = *std::min_element(v.begin(), v.end());
     std::vector<std::size_t> arg;
+    // Find all indexes of minimun value
     for(std::size_t i = 0; i < v.size(); i++)
     {
         if(v[i]==m)
@@ -378,6 +411,186 @@ std::vector<std::size_t> argsmin(std::vector<long double> v)
         }
     }
     return arg;
+}
+
+// -----------------------------------------------------------------------
+
+std::vector<std::size_t> where(std::vector<bool> mask)
+{
+    std::vector<std::size_t> result;
+
+    if(mask.empty())
+    {
+        return result;
+    }
+
+    for(std::size_t i = 0; i < mask.size(); i++)
+    {
+        if(mask[i])
+        {
+            result.push_back(i);
+        }
+    }
+
+    return result;
+}
+
+std::vector<std::size_t> where(std::vector<bool> mask1, std::vector<bool> mask2)
+{
+    std::vector<std::size_t> result = {};
+
+    if(mask1.empty() || mask2.empty())
+    {
+        return result;
+    }
+
+    if(mask1.size() != mask2.size())
+    {
+        std::cout << "Invalids vector, the vectors haven't the same dimension" << std::endl;
+        return result;
+    }
+
+    for(std::size_t i = 0; i < mask1.size(); i++)
+    {
+        if(mask1[i] && mask2[i])
+        {
+            result.push_back(i);
+        }
+    }
+
+    return result;
+}
+
+template <typename T>
+std::vector<bool> maskGE(std::vector<T> v1, std::vector<T> v2)
+{
+    std::vector<bool> result;
+    if(v1.size() != v2.size())
+    {
+        std::cout<<"Invalid comparation, the vectors hasn't the same dimension"<<std::endl;
+        return result;
+    }
+
+    for(std::size_t i = 0; i < v1.size(); i++)
+    {
+        if(v1[i] >= v2[i])
+        {
+            result.push_back(true);
+        }
+        else
+        {
+            result.push_back(false);
+        }
+    }
+    return result;
+}
+
+template <typename T, typename U>
+std::vector<bool> maskGE(std::vector<T> v, U l)
+{
+    std::vector<bool> result;
+    for(std::size_t i = 0; i < v.size(); i++)
+    {
+        if(v[i] >= l)
+        {
+            result.push_back(true);
+        }
+        else
+        {
+            result.push_back(false);
+        }
+    }
+    return result;
+}
+
+template <typename T>
+std::vector<bool> maskL(std::vector<T> v1, std::vector<T> v2)
+{
+    std::vector<bool> result;
+    if(v1.size() != v2.size())
+    {
+        std::cout<<"Invalid comparation, the vectors hasn't the same dimension"<<std::endl;
+        return result;
+    }
+
+    for(std::size_t i = 0; i < v1.size(); i++)
+    {
+        if(v1[i] < v2[i])
+        {
+            result.push_back(true);
+        }
+        else
+        {
+            result.push_back(false);
+        }
+    }
+    return result;
+}
+
+template <typename T, typename U>
+std::vector<bool> maskL(std::vector<T> v, U l)
+{
+    std::vector<bool> result;
+    for(std::size_t i = 0; i < v.size(); i++)
+    {
+        if(v[i] < l)
+        {
+            result.push_back(true);
+        }
+        else
+        {
+            result.push_back(false);
+        }
+    }
+    return result;
+}
+
+template <typename T>
+std::vector<bool> maskE(std::vector<T> v1, std::vector<T> v2)
+{
+    std::vector<bool> result;
+    if(v1.size() != v2.size())
+    {
+        std::cout<<"Invalid comparation, the vectors hasn't the same dimension"<<std::endl;
+        return result;
+    }
+
+    for(std::size_t i = 0; i < v1.size(); i++)
+    {
+        if(v1[i] == v2[i])
+        {
+            result.push_back(true);
+        }
+        else
+        {
+            result.push_back(false);
+        }
+    }
+    return result;
+}
+
+template <typename T, typename U>
+std::vector<bool> maskE(std::vector<T> v, U l)
+{
+    std::vector<bool> result;
+    for(std::size_t i = 0; i < v.size(); i++)
+    {
+        if(v[i] == l)
+        {
+            result.push_back(true);
+        }
+        else
+        {
+            result.push_back(false);
+        }
+    }
+    return result;
+}
+
+template <typename T, typename U>
+std::vector<bool> maskGEandL(std::vector<T> v, U l1, U l2)
+{
+    return maskE(maskGE(v,l1),maskL(v,l2));
 }
 
 }}} // END NAMESPACES.

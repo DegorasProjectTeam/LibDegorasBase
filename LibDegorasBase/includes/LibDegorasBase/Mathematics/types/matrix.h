@@ -428,6 +428,15 @@ public:
     void euclidian3DRotation(unsigned axis, const math::units::Radians& angle);
 
     /**
+     * @brief Check if two matrix are same with a tolerance level.
+     * @param M The matrix to comparate.
+     * @param tol The tolerance level.
+     * @return True if the matrixs are same with the tolerance level, and false otherwise.
+     */
+    template <typename U>
+    bool same(Matrix<U> M,long double tol) const;
+
+    /**
      * @brief Multiply by scalar operator.
      * @param scalar The scalar to multiply the matrix by.
      * @return The matrix multiplied by scalar.

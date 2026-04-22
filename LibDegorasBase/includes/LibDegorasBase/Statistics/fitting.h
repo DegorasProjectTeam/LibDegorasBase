@@ -148,6 +148,37 @@ template <typename T, typename Ret = T>
 std::vector<Ret> detrend(const std::vector<T>& x, const std::vector<T>& y,
                          const std::vector<T>& xinterp, const std::vector<T>& yinterp, unsigned int degree);
 
+
+/**
+ * @brief Calculate the value of interpolation function of x and y vectors in x_new
+ * @param x The strictly ordered vector corresponding with X axis.
+ * @param y The values vector corresponding with Y axis.
+ * @param x_new The point to evaluate the interpolation function.
+ * @param fill_values The 2-dimension vector corresponding to limit values of interpolation function.
+ * @return The value of interpolation function in x_new.
+ * @note If any or parameters are invalid the function return a nullopt.
+ * @note Both function are the same, except the filling option "extrapolate" or "assign".
+ */
+template <typename T>
+std::optional<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, T x_new);
+template <typename T>
+std::optional<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, T x_new, std::vector<T> fill_values);
+
+/**
+ * @brief Calculate the value of interpolation function of x and y vectors in x_new
+ * @param x The strictly ordered vector corresponding with X axis.
+ * @param y The values vector corresponding with Y axis.
+ * @param x_new The values vector to evaluate the interpolation function.
+ * @param fill_values The 2-dimension vector corresponding to limit values of interpolation function.
+ * @return The value of interpolation function in x_new.
+ * @note If any or parameters are invalid the function return a nullopt.
+ * @note Both function are the same, except the filling option "extrapolate" or "assign".
+ */
+template <typename T>
+std::vector<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, const std::vector<T>& x_new);
+template <typename T>
+std::vector<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, const std::vector<T>& x_new, std::vector<T> fill_values);
+
 }} // END NAMESPACES.
 // =====================================================================================================================
 

@@ -41,6 +41,7 @@
 // =====================================================================================================================
 #include <cmath>
 #include <omp.h>
+#include <numeric>
 // =====================================================================================================================
 
 // LIBRARY INCLUDES
@@ -70,6 +71,86 @@ template <typename T>
 T normalizeVal(T x, T x_min, T x_max)
 {
     return std::fmod(((std::fmod((x - x_min),(x_max - x_min)))+(x_max - x_min)), (x_max - x_min)) + x_min;
+}
+
+inline std::vector<std::size_t> where(std::vector<bool> mask)
+{
+    std::vector<std::size_t> result;
+
+    if(mask.empty())
+    {
+        return result;
+    }
+
+    for(std::size_t i = 0; i < mask.size(); i++)
+    {
+        if(mask[i])
+        {
+            result.push_back(i);
+        }
+    }
+
+    return result;
+}
+
+inline std::vector<long double> arange(long double start,long double stop,long double step)
+{
+    if(step == 0.0)
+    {
+        return {};
+    }
+    else if(step < 0)
+    {
+        if(start < stop)
+        {
+            return {};
+        }
+    }
+    else
+    {
+        if(start > stop)
+        {
+            return {};
+        }
+    }
+    std::vector<long double> x;
+    long double itr = 0;
+    for(std::size_t i = 0; ; i++)
+    {
+        itr = start + i*step;
+        if(itr >= stop && step > 0)
+        {
+            break;
+        }
+        else if(itr <= stop && step < 0)
+        {
+            break;
+        }
+        x.push_back(itr);
+    }
+    return x;
+}
+
+template <typename T>
+inline std::vector<T> SortValues(const std::vector<T>& v)
+{
+    std::vector<T> aux = v;
+    std::sort(aux.begin(), aux.end());
+    return aux;
+}
+
+template <typename T>
+std::vector<std::size_t> Argsort(const std::vector<T>& v)
+{
+    std::vector<std::size_t> idx(v.size());
+    std::iota(idx.begin(), idx.end(), 0);
+
+    std::stable_sort(idx.begin(), idx.end(),
+                     [&v](std::size_t i, std::size_t j) {
+                         return v[i] < v[j];
+                     });
+
+    return idx;
 }
 
 }} // END NAMESPACES.

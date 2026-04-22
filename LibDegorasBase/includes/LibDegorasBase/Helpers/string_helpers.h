@@ -129,6 +129,9 @@ std::string numberToStr(T x, unsigned int prec, unsigned int dec_places, bool fi
 template<typename T>
 std::string numberToMaxDecStr(const T& x);
 
+std::vector<std::string> split(const std::string& line);
+std::string strip(const std::string& line);
+
 }}} // END NAMESPACES
 // =====================================================================================================================
 

@@ -39,6 +39,7 @@
 #include <vector>
 #include <cmath>
 #include <numeric>
+#include <optional>
 // =====================================================================================================================
 
 // LIBRARY INCLUDES
@@ -190,6 +191,22 @@ T applyPolynomial(const std::vector<T>& coefs, T x)
         x_pow.push_back(std::pow(x, i));
 
     return std::inner_product(coefs.begin(), coefs.end(), x_pow.begin(), T(0));
+}
+
+template <typename T>
+std::vector<T> applyPolynomial(const std::vector<T>& coefs, std::vector<T> x)
+{
+    if (coefs.empty())
+        return {};
+
+    std::vector<T> result(x.size());
+
+    for(std::size_t i = 0; i < x.size(); i++)
+    {
+        result[i] = applyPolynomial(coefs,x[i]);
+    }
+
+    return result;
 }
 
 template <typename T, typename Ret>
@@ -350,6 +367,203 @@ std::vector<Ret> detrend(const std::vector<T>& x, const std::vector<T>& y,
 
     // Return the data with the fit removed.
     return ret;
+}
+
+template <typename T>
+std::optional<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, T x_new)
+{
+    // Check if the both vector are the same size
+    if(x.size() != y.size())
+    {
+        std::cout<<"Invalid input, x and y are not the same length"<<std::endl;
+        return std::nullopt;
+    }
+
+    // Check if x and y are vectors with 2 or more elements
+    if(x.size() == 1 || y.size() == 1)
+    {
+        std::cout<<"Invalid input, x or y are not a valid vector"<<std::endl;
+        return std::nullopt;
+    }
+
+    // Check if the elements of each vectors are valid
+    for(std::size_t i = 0; i < x.size(); i++)
+    {
+        if(i != x.size()-1)
+        {
+            // Check if x is a strictly ordered vector
+            if(x[i] >= x[i+1])
+            {
+                std::cout<<"Invalid input, x is not a strictly ordered vector"<<std::endl;
+                return std::nullopt;
+            }
+        }
+        // Check if any x elements are NaN, +Inf or -Inf
+        if(std::isnan(x[i]) || std::isinf(x[i]))
+        {
+            std::cout << "Invalid input, x[" << i << "] is " << x[i] << std::endl;
+            return std::nullopt;
+        }
+        // Check if any y elements are NaN, +Inf or -Inf
+        if(std::isnan(y[i]) || std::isinf(y[i]))
+        {
+            std::cout << "Invalid input, y[" << i << "] is " << y[i] << std::endl;
+            return std::nullopt;
+        }
+    }
+
+    // Initialice the scope and the result
+    T m;
+    T y_new;
+
+    // Check the inferior limit case
+    if(x_new < x[0])
+    {
+        // Perform the calculation of interpolation function value in x_new
+        m = (y[1] - y[0])/(x[1] - x[0]);
+        y_new = y[0] + m*(x_new - x[0]);
+        return y_new;
+    }
+    // Check the superior limit case
+    else if(x_new > x[x.size()-1])
+    {
+        // Perform the calculation of interpolation function value in x_new
+        m = (y[x.size()-1] - y[x.size()-2])/(x[x.size()-1] - x[x.size()-2]);
+        y_new = y[x.size()-1] + m*(x_new - x[x.size()-1]);
+        return y_new;
+    }
+
+    std::size_t i = 0;
+
+    // Search the position of x_new in x vector
+    for(std::size_t j = 0; j < x.size()-1; j++)
+    {
+        if(x[j] <= x_new && x_new <= x[j+1])
+        {
+            i = j;
+            break;
+        }
+    }
+
+    // Perform the calculation of interpolation function value in x_new
+    m = (y[i+1] - y[i])/(x[i+1] - x[i]);
+    y_new = y[i] + m*(x_new - x[i]);
+
+    return y_new;
+}
+
+template <typename T>
+std::optional<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, T x_new, std::vector<T> fill_values)
+{
+    // Check if the both vector are the same size
+    if(x.size() != y.size())
+    {
+        std::cout<<"Invalid input, x and y are not the same length"<<std::endl;
+        return std::nullopt;
+    }
+
+    // Check if x and y are vectors with 2 or more elements
+    if(x.size() == 1 || y.size() == 1)
+    {
+        std::cout<<"Invalid input, x or y are not a valid vector"<<std::endl;
+        return std::nullopt;
+    }
+
+    // Check if the elements of each vectors are valid
+    for(std::size_t i = 0; i < x.size(); i++)
+    {
+        if(i != x.size()-1)
+        {
+            // Check if x is a strictly ordered vector
+            if(x[i] >= x[i+1])
+            {
+                std::cout<<"Invalid input, x is not a strictly ordered vector"<<std::endl;
+                return std::nullopt;
+            }
+        }
+        // Check if any x elements are NaN, +Inf or -Inf
+        if(std::isnan(x[i]) || std::isinf(x[i]))
+        {
+            std::cout << "Invalid input, x[" << i << "] is " << x[i] << std::endl;
+            return std::nullopt;
+        }
+        // Check if any y elements are NaN, +Inf or -Inf
+        if(std::isnan(y[i]) || std::isinf(y[i]))
+        {
+            std::cout << "Invalid input, y[" << i << "] is " << y[i] << std::endl;
+            return std::nullopt;
+        }
+    }
+
+    // Check if fill values is a valid vector
+    if(fill_values.size() != 2)
+    {
+        std::cout << "Invalid input, fill values have not two elements" << std::endl;
+        return std::nullopt;
+    }
+
+    // Initialice the scope and result
+    T m;
+    T y_new;
+
+    // Check the inferior limit case
+    if(x_new < x[0])
+    {
+        return fill_values[0];
+    }
+    // Check the superior limit case
+    else if(x_new > x[x.size()-1])
+    {
+        return fill_values[1];
+    }
+
+    std::size_t i = 0;
+
+    // Search the position of x_new in x vector
+    for(std::size_t j = 0; j < x.size()-1; j++)
+    {
+        if(x[j] <= x_new && x_new <= x[j+1])
+        {
+            i = j;
+            break;
+        }
+    }
+
+    // Perform the calculation of interpolation function value in x_new
+    m = (y[i+1] - y[i])/(x[i+1] - x[i]);
+    y_new = y[i] + m*(x_new - x[i]);
+
+    return y_new;
+}
+
+template <typename T>
+std::vector<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, const std::vector<T>& x_new)
+{
+    std::vector<T> result(x_new.size());
+    for(std::size_t i = 0; i < x_new.size(); i++)
+    {
+        result[i] = linearInterpolation(x,y,x_new[i]);
+        if(!result[i].has_value())
+        {
+            return {};
+        }
+        return result;
+    }
+}
+
+template <typename T>
+std::vector<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, const std::vector<T>& x_new, std::vector<T> fill_values)
+{
+    std::vector<T> result(x_new.size());
+    for(std::size_t i = 0; i < x_new.size(); i++)
+    {
+        result[i] = linearInterpolation(x,y,x_new[i],fill_values);
+        if(!result[i].has_value())
+        {
+            return {};
+        }
+        return result;
+    }
 }
 
 }} // END NAMESPACES.

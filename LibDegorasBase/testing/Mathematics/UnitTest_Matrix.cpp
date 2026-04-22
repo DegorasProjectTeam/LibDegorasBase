@@ -5,8 +5,6 @@
 
 #include <LibDegorasBase/Mathematics/types/matrix.h>
 
-#include <LibDegorasBase/Statistics/measures.h>
-
 using dpbase::math::types::Matrix;
 
 void testMatrix()
@@ -458,7 +456,7 @@ void testMatrixMultiplication()
     assert(result21 == expected21);
     assert(result3 == expected3);
 
-    // assert(result4 == expected4); // El error puede ser debido a que en la representacion binaria
+    assert(result4 == expected4); // El error puede ser debido a que en la representacion binaria
     // el 114.4 es periodico y por tanto por mas precision que se le pida este numero no puede
     // ser representado por un numero con decimales finitos en binario por lo que C++ aproximara
     // dicho numero al mas cercano con la precision que tenga, la cosa es que esta aproximacion
@@ -3096,6 +3094,8 @@ void testMatrixInverseComparation()
     std::cout<<"---------------------------------"<<std::endl;
 }
 
+
+
 void testMatrixDeterminantComparation()
 {
     Matrix<long double> matrixp0({{4,3,2,1},{3,3,2,1},{2,2,2,1},{1,1,1,1}});
@@ -3410,101 +3410,6 @@ void testMatrixDeterminantComparation()
     std::cout<<"---------------------------------"<<std::endl;
 }
 
-void testStatisticsConvolve()
-{
-    std::vector<long double> v1 = {2,5,3,9,0,12,3,7,5,4,2};
-    std::vector<long double> v2 = {8,4};
-    std::vector<long double> vf = dpbase::stats::measures::convolve(v1,v2,"full");
-    std::vector<long double> vs = dpbase::stats::measures::convolve(v1,v2,"same");
-    std::vector<long double> vv = dpbase::stats::measures::convolve(v1,v2,"valid");
-    std::vector<long double> ve = dpbase::stats::measures::convolve(v1,v2,"error");
-
-    std::cout<<"---------------------------------"<<std::endl;
-    std::cout<<"testStatisticsConvolve"<<std::endl<<std::endl;
-    std::cout<<"Test vectors are:"<<std::endl<<std::endl;
-    std::cout<<"v1 = [";
-    for(std::size_t i = 0; i < v1.size()-1; i++)
-    {
-        std::cout<<v1[i]<<", ";
-    }
-    std::cout<<v1[v1.size()-1]<<"]"<<std::endl<<std::endl;
-    std::cout<<"v2 = [";
-    for(std::size_t i = 0; i < v2.size()-1; i++)
-    {
-        std::cout<<v2[i]<<", ";
-    }
-    std::cout<<v2[v2.size()-1]<<"]"<<std::endl<<std::endl;
-    std::cout<<"Test convolved vectors with full mode is:"<<std::endl<<std::endl;
-    std::cout<<"vf = [";
-    for(std::size_t i = 0; i < vf.size()-1; i++)
-    {
-        std::cout<<vf[i]<<", ";
-    }
-    std::cout<<vf[vf.size()-1]<<"]"<<std::endl<<std::endl;
-    std::cout<<"Test convolved vectors with same mode is:"<<std::endl<<std::endl;
-    std::cout<<"vs = [";
-    for(std::size_t i = 0; i < vs.size()-1; i++)
-    {
-        std::cout<<vs[i]<<", ";
-    }
-    std::cout<<vs[vs.size()-1]<<"]"<<std::endl<<std::endl;
-    std::cout<<"Test convolved vectors with valid mode is:"<<std::endl<<std::endl;
-    std::cout<<"vv = [";
-    for(std::size_t i = 0; i < vv.size()-1; i++)
-    {
-        std::cout<<vv[i]<<", ";
-    }
-    std::cout<<vv[vv.size()-1]<<"]"<<std::endl<<std::endl;
-    std::cout<<"Test convolved vectors with an invalid mode is:"<<std::endl<<std::endl;
-
-    if(ve.size()>0)
-    {
-        std::cout<<"ve = [";
-        for(std::size_t i = 0; i < ve.size()-1; i++)
-        {
-            std::cout<<ve[i]<<", ";
-        }
-        std::cout<<ve[ve.size()-1]<<"]"<<std::endl<<std::endl;
-    }
-    else
-    {
-        std::cout<<"[]"<<std::endl<<std::endl;
-    }
-    std::cout<<"---------------------------------"<<std::endl;
-}
-
-void testStatisticsArguments()
-{
-    std::vector<long double> v1 = {1,4,1,7,10,10,7,3,10,10};
-    std::vector<long double> v2 = {1,1,2,5,8,1,3,9,2};
-    std::size_t v1m = dpbase::stats::measures::argmin(v1);
-    std::size_t v2M = dpbase::stats::measures::argmax(v2);
-    std::vector<std::size_t> v1M = dpbase::stats::measures::argsmax(v1);
-    std::vector<std::size_t> v2m = dpbase::stats::measures::argsmin(v2);
-
-    std::cout<<"---------------------------------"<<std::endl;
-    std::cout<<"testStatisticsArguments"<<std::endl<<std::endl;
-    std::cout<<"Test vectors are:"<<std::endl<<std::endl;
-    std::cout<<"v1 = [";
-    for(std::size_t i = 0; i < v1.size()-1; i++)
-    {
-        std::cout<<v1[i]<<", ";
-    }
-    std::cout<<v1[v1.size()-1]<<"]"<<std::endl<<std::endl;
-    std::cout<<"v2 = [";
-    for(std::size_t i = 0; i < v2.size()-1; i++)
-    {
-        std::cout<<v2[i]<<", ";
-    }
-    std::cout<<v2[v2.size()-1]<<"]"<<std::endl<<std::endl;
-
-    std::cout<<"The minimun value argument of v1 is: "<<v1m<<std::endl<<std::endl;
-    std::cout<<"The minimun value of v1 is: "<<v1[v1m]<<std::endl<<std::endl;
-    std::cout<<"The maximun value argument of v2 is: "<<v2M<<std::endl<<std::endl;
-    std::cout<<"The maximun value of v2 is: "<<v2[v2M]<<std::endl<<std::endl;
-    std::cout<<"---------------------------------"<<std::endl;
-}
-
 void prueba()
 {
     Matrix<long double> M(20,20,0);
@@ -3539,6 +3444,7 @@ void prueba()
     std::cout << "Absolute error: " << E << std::endl<< std::endl;
     std::cout << "Relative error: " << e << std::endl<< std::endl;
     std::cout << "Total time: " << total_us << " us" << std::endl<< std::endl;
+
 }
 
 int main()
@@ -3571,8 +3477,6 @@ int main()
     testMatrixInverse();
     testMatrixInverseCholesky();
     testMatrixInverseComparation();
-    testStatisticsConvolve();
-    testStatisticsArguments();
     //prueba();
 
     // All assertions passed

@@ -135,5 +135,35 @@ std::string fillStr(const std::string& fillChar, size_t width)
     return result;
 }
 
+std::vector<std::string> split(const std::string& line)
+{
+    std::vector<std::string> result;
+    std::istringstream iss(line);
+    std::string word;
+
+    while(iss >> word)
+    {
+        result.push_back(word);
+    }
+
+    return result;
+}
+
+std::string strip(const std::string& line)
+{
+    std::string aux = " \t\n\r";
+
+    size_t start = line.find_first_not_of(aux);
+
+    if (start == std::string::npos)
+    {
+        return "";
+    }
+
+    size_t end = line.find_last_not_of(aux);
+
+    return line.substr(start, (end - start + 1));
+}
+
 }}}// END NAMESPACES.
 // =====================================================================================================================
