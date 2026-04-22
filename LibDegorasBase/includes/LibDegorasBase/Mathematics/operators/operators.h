@@ -69,29 +69,7 @@ std::vector<std::common_type_t<T,U>> operator -(const std::vector<T>& a, const s
 template <typename T, typename U>
 std::vector<std::common_type_t<T,U>> operator -(const std::vector<T>& a, const U& b);
 
-template <typename T>
-std::vector<T> abs(const std::vector<T>& a);
 
-template <typename T>
-std::vector<T> sqrt(const std::vector<T>& a);
-
-template <typename T>
-std::vector<T> cos(const std::vector<T>& a);
-
-template <typename T>
-std::vector<T> sin(const std::vector<T>& a);
-
-template <typename T>
-std::vector<T> tan(const std::vector<T>& a);
-
-template <typename T>
-std::vector<T> acos(const std::vector<T>& a);
-
-template <typename T>
-std::vector<T> asin(const std::vector<T>& a);
-
-template <typename T>
-std::vector<T> atan(const std::vector<T>& a);
 
 template <typename T>
 std::vector<bool> operator ==(std::vector<T> v1, std::vector<T> v2);

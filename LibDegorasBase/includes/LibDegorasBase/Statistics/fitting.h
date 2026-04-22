@@ -122,6 +122,15 @@ std::vector<Ret> polynomialFit(const std::vector<T>& x, const std::vector<T>& y,
 template <typename T>
 T applyPolynomial(const std::vector<T>& coefs, T x);
 
+/**
+ * @brief Resolve for @param x the polynomial given by its coefficients in @param coefs.
+ * @param coefs The coefficients of the polynomial: coefs[0] + coefs[1] * x + cofes[2] * x^2 + ... + coefs[n] * x^n
+ * @param x The independent variables vector for resolving the polynomial.
+ * @return The solution of the polynomial: coefs[0] + coefs[1] * x + cofes[2] * x^2 + ... + coefs[n] * x^n.
+ *         If @param coefs is empty, returns 0.
+ */
+template <typename T>
+std::vector<T> applyPolynomial(const std::vector<T>& coefs, std::vector<T> x);
 
 /**
  * @brief Removes polynomial trend from the data in y.

@@ -970,7 +970,7 @@ std::pair<int,Matrix<long double>> Matrix<T>::invCholesky() const
             suma_diag += U[k][i]*U[k][i];
         }
 
-        U[i][i] = sqrt(A[i][i] - suma_diag);
+        U[i][i] = std::sqrt(A[i][i] - suma_diag);
 
         if(std::isnan(U[i][i]) || std::isinf(U[i][i]))
         {

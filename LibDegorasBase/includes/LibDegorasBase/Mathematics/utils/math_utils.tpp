@@ -153,5 +153,14 @@ std::vector<std::size_t> Argsort(const std::vector<T>& v)
     return idx;
 }
 
+template <typename T>
+std::vector<T> abs(const std::vector<T>& a)
+{
+    std::vector<T> result;
+    for (size_t i = 0; i < a.size(); i++)
+        result.push_back(std::abs(a[i]));
+    return result;
+}
+
 }} // END NAMESPACES.
 // =====================================================================================================================

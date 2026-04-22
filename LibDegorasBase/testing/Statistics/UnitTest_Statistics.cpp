@@ -287,46 +287,6 @@ void testStatisticsLinearInterpolation()
     }
 
     std::cout<<"---------------------------------"<<std::endl;
-
-    using dpbase::stats::measures::maskGEandL;
-    using dpbase::stats::measures::maskL;
-    using dpbase::stats::measures::maskGE;
-    using dpbase::stats::measures::where;
-
-    std::vector<long double> v = {0,1,2,3,4,5,6,7,8,9};
-    auto p1 = where(maskGE(v,4),maskL(v,8));
-    auto p2 = maskL(v,8);
-    auto p3 = maskGE(v,9);
-
-    if(!p1.empty())
-    {
-        std::cout<<"p1 = [";
-        for(std::size_t i = 0; i < p1.size()-1; i++)
-        {
-            std::cout<<p1[i]<<", ";
-        }
-        std::cout<<p1[p1.size()-1]<<"]"<<std::endl<<std::endl;
-    }
-
-    if(!p2.empty())
-    {
-        std::cout<<"p2 = [";
-        for(std::size_t i = 0; i < p2.size()-1; i++)
-        {
-            std::cout<<p2[i]<<", ";
-        }
-        std::cout<<p2[p2.size()-1]<<"]"<<std::endl<<std::endl;
-    }
-
-    if(!p3.empty())
-    {
-        std::cout<<"p3 = [";
-        for(std::size_t i = 0; i < p3.size()-1; i++)
-        {
-            std::cout<<p3[i]<<", ";
-        }
-        std::cout<<p3[p3.size()-1]<<"]"<<std::endl<<std::endl;
-    }
 }
 
 int main()

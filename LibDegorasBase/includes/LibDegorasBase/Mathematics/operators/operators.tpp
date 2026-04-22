@@ -77,15 +77,6 @@ std::vector<std::common_type_t<T,U>> operator -(const std::vector<T>& a, const s
 template <typename T, typename U>
 std::vector<std::common_type_t<T,U>> operator -(const std::vector<T>& a, const U& b) {return a + (-b);}
 
-template <typename T>
-std::vector<T> abs(const std::vector<T>& a)
-{
-    std::vector<T> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(std::abs(a[i]));
-    return result;
-}
-
 template <typename T, typename U>
 std::vector<std::common_type_t<T,U>> operator *(const std::vector<T>& a, const std::vector<U>& b)
 {
