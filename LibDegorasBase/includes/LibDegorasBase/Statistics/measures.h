@@ -413,5 +413,54 @@ std::vector<std::size_t> argsmin(std::vector<T>& v)
     return arg;
 }
 
+/**
+ * @brief Calculate a robust estimation of the mean.
+ * @param N, the vector to calculated the mean.
+ * @return The robust estimation of the mean.
+ */
+long double sig1PEAK(std::vector<long double> N)
+{
+    if(N.size() == 1)
+    {
+        return N[0];
+    }
+
+    long double rsd = stddev(N);
+    long double rm = mean(N);
+
+    std::vector<long double> Nfill;
+    std::copy_if(N.begin(),N.end(), std::back_inserter(Nfill), [&](long double val)
+                 {
+                     return std::abs(val - rm) < 3.0*rsd;
+                 });
+
+    rsd = stddev(Nfill);
+    long double m1 = mean(Nfill);
+
+    long double m0 = m1 + 1.0;
+
+    for(size_t mi = 0; mi < 20;mi++)
+    {
+        if(std::abs(m1-m0) < 0.001)
+        {
+            break;
+        }
+        Nfill = {};
+        m0 = m1;
+        std::copy_if(N.begin(),N.end(), std::back_inserter(Nfill), [&](long double val)
+                     {
+                         return std::abs(val - m0) <= 1.0*rsd;
+                     });
+
+        if (Nfill.empty())
+        {
+            return m0;
+        }
+        m1 = mean(Nfill);
+    }
+
+    return m1;
+}
+
 }}} // END NAMESPACES.
 // =====================================================================================================================

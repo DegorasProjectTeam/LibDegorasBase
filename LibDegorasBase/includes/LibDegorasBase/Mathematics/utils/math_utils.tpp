@@ -39,9 +39,13 @@
 
 // C++ INCLUDES
 // =====================================================================================================================
+#include <vector>
 #include <cmath>
 #include <omp.h>
+#include <algorithm>
 #include <numeric>
+#include <execution>
+#include <functional>
 // =====================================================================================================================
 
 // LIBRARY INCLUDES
@@ -77,10 +81,7 @@ inline std::vector<std::size_t> where(std::vector<bool> mask)
 {
     std::vector<std::size_t> result;
 
-    if(mask.empty())
-    {
-        return result;
-    }
+    result.reserve(std::count(mask.begin(), mask.end(), true));
 
     for(std::size_t i = 0; i < mask.size(); i++)
     {
@@ -93,72 +94,117 @@ inline std::vector<std::size_t> where(std::vector<bool> mask)
     return result;
 }
 
-inline std::vector<long double> arange(long double start,long double stop,long double step)
-{
-    if(step == 0.0)
-    {
-        return {};
-    }
-    else if(step < 0)
-    {
-        if(start < stop)
-        {
-            return {};
-        }
-    }
-    else
-    {
-        if(start > stop)
-        {
-            return {};
-        }
-    }
-    std::vector<long double> x;
-    long double itr = 0;
-    for(std::size_t i = 0; ; i++)
-    {
-        itr = start + i*step;
-        if(itr >= stop && step > 0)
-        {
-            break;
-        }
-        else if(itr <= stop && step < 0)
-        {
-            break;
-        }
-        x.push_back(itr);
-    }
-    return x;
-}
-
-template <typename T>
-inline std::vector<T> SortValues(const std::vector<T>& v)
-{
-    std::vector<T> aux = v;
-    std::sort(aux.begin(), aux.end());
-    return aux;
-}
-
-template <typename T>
-std::vector<std::size_t> Argsort(const std::vector<T>& v)
+// TODO refactor name
+template <typename T, typename Compare>
+std::vector<std::size_t> sortValArg(const std::vector<T>& v, Compare comp)
 {
     std::vector<std::size_t> idx(v.size());
     std::iota(idx.begin(), idx.end(), 0);
 
     std::stable_sort(idx.begin(), idx.end(),
-                     [&v](std::size_t i, std::size_t j) {
-                         return v[i] < v[j];
-                     });
+                     [&v, &comp](std::size_t i, std::size_t j) {
+                         return comp(v[i], v[j]);});
 
     return idx;
 }
 
-template <typename T>
-std::vector<T> abs(const std::vector<T>& a)
+template <typename Container>
+Container abs(const Container& a)
 {
-    std::vector<T> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(std::abs(a[i]));
+    Container result;
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [](auto val){
+        return std::abs(val);});
+
+    return result;
+}
+
+template <typename Container>
+Container sqrt(const Container& a)
+{
+    Container result;
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [](auto val){
+        return std::sqrt(val);});
+
+    return result;
+}
+
+template <typename Container>
+Container exp(const Container& a)
+{
+    Container result(a.size());
+
+    std::transform(a.begin(), a.end(), result.begin(), [](auto val){
+        return std::exp(val);
+    });
+
+    return result;
+}
+
+template <typename Container>
+Container cos(const Container& a)
+{
+    Container result;
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [](auto val){
+        return std::cos(val);});
+
+    return result;
+}
+
+template <typename Container>
+Container sin(const Container& a)
+{
+    Container result;
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [](auto val){
+        return std::sin(val);});
+
+    return result;
+}
+
+template <typename Container>
+Container tan(const Container& a)
+{
+    Container result;
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [](auto val){
+        return std::tan(val);});
+
+    return result;
+}
+
+template <typename Container>
+Container acos(const Container& a)
+{
+    Container result;
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [](auto val){
+        return std::acos(val);});
+
+    return result;
+}
+
+template <typename Container>
+Container asin(const Container& a)
+{
+    Container result;
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [](auto val){
+        return std::asin(val);});
+
+    return result;
+}
+
+template <typename Container>
+Container atan(const Container& a)
+{
+    Container result;
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [](auto val){
+        return std::atan(val);});
+
     return result;
 }
 

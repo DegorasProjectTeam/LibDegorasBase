@@ -566,5 +566,94 @@ std::vector<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>&
     }
 }
 
+template <typename T>
+std::vector<T> gaussModel(const std::vector<T>& x, T A, T mu, T sigma)
+{
+    std::vector<T> sol(x.size());
+    T den = 2.0 * sigma * sigma;
+
+    std::transform(x.begin(), x.end(), sol.begin(), [&A, &mu, den](auto val)
+                   {return A * std::exp(-(val - mu) * (val - mu) / den);});
+
+    return sol;
+}
+
+template <typename T>
+std::vector<T> curve_fit_Gauss(const std::vector<T>& x, const std::vector<T>& y, const std::vector<T>& p0, std::size_t max_iter)
+{
+    T A = p0[0];
+    T mu = p0[1];
+    T sigma = p0[2];
+
+    std::vector<long double> p = {A,mu,sigma};
+    long double lam = 0.1;
+    std::size_t iter = 0;
+
+    while(iter < max_iter)
+    {
+        iter++;
+        A = p[0];
+        mu = p[1];
+        sigma = p[2];
+        sigma = std::max(sigma,(T)1e-6);
+
+        auto y_pred = gaussModel(x,A,mu,sigma);
+        auto resid = y - y_pred;
+        auto aux = resid * resid;
+        auto Sc0 = std::accumulate(aux.begin(), aux.end(), 0.0L);
+
+        auto diff = x - mu;
+        auto e_part = exp(-diff*diff/(2*sigma*sigma));
+        Matrix<T> J;
+        J.pushBackRow(e_part);
+        J.pushBackRow(e_part*(diff/(sigma*sigma))*A);
+        J.pushBackRow(e_part*(diff*diff/(sigma*sigma*sigma))*A);
+        J = J.transpose();
+
+        Matrix<T> resid_aux;
+        resid_aux.pushBackRow(resid);
+        resid_aux = resid_aux.transpose();
+        Matrix<T> H = J.transpose()*J + Matrix<long double>::I(3) * lam;
+        Matrix<T> B = J.transpose()*resid_aux;
+
+        Matrix<T> H_inv = H.invAdjoint();
+        if(H.isEmpty())
+        {
+            lam = lam * 10;
+        }
+
+        Matrix<T> delta_aux = H_inv*B;
+        std::vector<T> delta(delta_aux.rowSize());
+        for(std::size_t i = 0; i < delta_aux.rowSize(); i++)
+        {
+            delta[i] = delta_aux[i][0];
+        }
+
+        auto p1 = p + delta;
+        p1[2] = std::abs(p1[2]);
+        p1[2] = std::max(std::abs(p1[2]), (T)1e-6);
+
+
+        auto y1 = gaussModel(x,p1[0],p1[1],p1[2]);
+        aux = (y - y1)*(y - y1);
+        auto Sc1 = std::accumulate(aux.begin(), aux.end(), 0.0L);
+
+        if(Sc1 < Sc0)
+        {
+            if(std::abs(Sc0 - Sc1) < 1e-7)
+            {
+                return p1;
+            }
+            p = p1;
+            lam = lam/10;
+        }
+        else
+        {
+            lam = lam*10;
+        }
+    }
+    return p;
+}
+
 }} // END NAMESPACES.
 // =====================================================================================================================

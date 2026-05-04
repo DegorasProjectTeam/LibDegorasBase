@@ -215,93 +215,81 @@ linspaceStep(const T& start, const T& end, const T& step)
 std::vector<std::size_t> where(std::vector<bool> mask);
 
 /**
- * @brief Generates a sequence of numbers from beginning to end with a given step.
- * @param start The first value of the sequence.
- * @param stop The last posible value of the sequence.
- * @param step The diference between two consecutive elements of secquence.
- * @return A sequence of numbers.
- */
-std::vector<long double> arange(long double start,long double stop,long double step);
-
-/**
- * @brief Order the elements of a vector from smallest to largest.
+ * @brief Order the elements of a vector from comparison criterion.
  * @param v The vector to sort.
- * @return The vector ordered.
- */
-template <typename T>
-inline std::vector<T> SortValues(const std::vector<T>& v);
-
-/**
- * @brief Order the elements of a vector from smallest to largest.
- * @param v The vector to sort.
+ * @param comp The criterion, , the default criterion is smallest to largest.
  * @return The indeces vector of ordered vector.
  */
-template <typename T>
-std::vector<std::size_t> Argsort(const std::vector<T>& v);
+
+template <typename T, typename Compare = std::less<T>>
+std::vector<std::size_t> sortValArg(const std::vector<T>& v, Compare comp = Compare());
 
 /**
  * @brief Calculate the absolute valor of each element of a vector.
  * @param a The vector.
  * @return The vector of absolutes values.
  */
-template <typename T>
-std::vector<T> abs(const std::vector<T>& a);
+template <typename Container>
+Container abs(const Container& a);
 
 /**
  * @brief Calculate the square root of each element of a vector.
  * @param a The vector.
  * @return The vector of squares roots.
  */
-template <typename T>
-std::vector<T> sqrt(const std::vector<T>& a);
+template <typename Container>
+Container sqrt(const Container& a);
+
+template <typename Container>
+Container exp(const Container& a);
 
 /**
  * @brief Calculate the cosine of each element of a vector.
  * @param a The vector.
  * @return The vector of cosines.
  */
-template <typename T>
-std::vector<T> cos(const std::vector<T>& a);
+template <typename Container>
+Container cos(const Container& a);
 
 /**
  * @brief Calculate the sine of each element of a vector.
  * @param a The vector.
  * @return The vector of sines.
  */
-template <typename T>
-std::vector<T> sin(const std::vector<T>& a);
+template <typename Container>
+Container sin(const Container& a);
 
 /**
  * @brief Calculate the tangent of each element of a vector.
  * @param a The vector.
  * @return The vector of tangents.
  */
-template <typename T>
-std::vector<T> tan(const std::vector<T>& a);
+template <typename Container>
+Container tan(const Container& a);
 
 /**
  * @brief Calculate the arccosine of each element of a vector.
  * @param a The vector.
  * @return The vector of arccosines.
  */
-template <typename T>
-std::vector<T> acos(const std::vector<T>& a);
+template <typename Container>
+Container acos(const Container& a);
 
 /**
  * @brief Calculate the arcsine of each element of a vector.
  * @param a The vector.
  * @return The vector of arcsines.
  */
-template <typename T>
-std::vector<T> asin(const std::vector<T>& a);
+template <typename Container>
+Container asin(const Container& a);
 
 /**
  * @brief Calculate the arctangent of each element of a vector.
  * @param a The vector.
  * @return The vector of arctangents.
  */
-template <typename T>
-std::vector<T> atan(const std::vector<T>& a);
+template <typename Container>
+Container atan(const Container& a);
 
 }} // END NAMESPACES
 // =====================================================================================================================

@@ -106,7 +106,11 @@ types::HistCountRes<C> histcounts1D(const C& data, size_t nbins)
     ConType max_counter = *(minmax.second);
 
     // Get the division.
-    ConType div = (std::abs(max_counter) + std::abs(min_counter)) / nbins;
+    // ConType div = (std::abs(max_counter) + std::abs(min_counter)) / nbins;
+    // Si la division fuese en un intervalo que no pasa por el 0, div daria un
+    // resultado errorneo para una division de la amplitud de un intervalo
+    // por eso he puesto la formula clasica de la amplitud en la division M - m
+    ConType div = (max_counter - min_counter) / nbins;
 
     // Parallel loop for each bin.
     omp_set_num_threads(omp_get_num_procs());

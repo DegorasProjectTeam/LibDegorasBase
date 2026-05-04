@@ -135,19 +135,6 @@ std::string fillStr(const std::string& fillChar, size_t width)
     return result;
 }
 
-std::vector<std::string> split(const std::string& line)
-{
-    std::vector<std::string> result;
-    std::istringstream iss(line);
-    std::string word;
-
-    while(iss >> word)
-    {
-        result.push_back(word);
-    }
-
-    return result;
-}
 
 std::string strip(const std::string& line)
 {

@@ -69,37 +69,35 @@ std::vector<std::common_type_t<T,U>> operator -(const std::vector<T>& a, const s
 template <typename T, typename U>
 std::vector<std::common_type_t<T,U>> operator -(const std::vector<T>& a, const U& b);
 
-
+template <typename T>
+std::vector<bool> operator ==(const std::vector<T>& a, const std::vector<T>& b);
+template <typename T, typename U>
+std::vector<bool> operator ==(const std::vector<T>& a, const U& b);
 
 template <typename T>
-std::vector<bool> operator ==(std::vector<T> v1, std::vector<T> v2);
+std::vector<bool> operator !=(const std::vector<T>& a, const std::vector<T>& b);
 template <typename T, typename U>
-std::vector<bool> operator ==(std::vector<T> v, U l);
+std::vector<bool> operator !=(const std::vector<T>& a, const U& b);
 
 template <typename T>
-std::vector<bool> operator !=(std::vector<T> v1, std::vector<T> v2);
+std::vector<bool> operator >(const std::vector<T>& a, const std::vector<T>& b);
 template <typename T, typename U>
-std::vector<bool> operator !=(std::vector<T> v, U l);
+std::vector<bool> operator >(const std::vector<T>& a, const U& b);
 
 template <typename T>
-std::vector<bool> operator >(std::vector<T> v1, std::vector<T> v2);
+std::vector<bool> operator <(const std::vector<T>& a, const std::vector<T>& b);
 template <typename T, typename U>
-std::vector<bool> operator >(std::vector<T> v, U l);
+std::vector<bool> operator <(const std::vector<T>& a, const U& b);
 
 template <typename T>
-std::vector<bool> operator <(std::vector<T> v1, std::vector<T> v2);
+std::vector<bool> operator >=(const std::vector<T>& a, const std::vector<T>& b);
 template <typename T, typename U>
-std::vector<bool> operator <(std::vector<T> v, U l);
+std::vector<bool> operator >=(const std::vector<T>& a, const U& b);
 
 template <typename T>
-std::vector<bool> operator >=(std::vector<T> v1, std::vector<T> v2);
+std::vector<bool> operator <=(const std::vector<T>& a, const std::vector<T>& b);
 template <typename T, typename U>
-std::vector<bool> operator >=(std::vector<T> v, U l);
-
-template <typename T>
-std::vector<bool> operator <=(std::vector<T> v1, std::vector<T> v2);
-template <typename T, typename U>
-std::vector<bool> operator <=(std::vector<T> v, U l);
+std::vector<bool> operator <=(const std::vector<T>& a, const U& b);
 
 std::vector<bool> operator &&(const std::vector<bool>& a, const std::vector<bool>& b);
 std::vector<bool> operator ||(const std::vector<bool>& a, const std::vector<bool>& b);

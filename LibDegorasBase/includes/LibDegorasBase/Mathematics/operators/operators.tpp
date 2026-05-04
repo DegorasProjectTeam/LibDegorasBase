@@ -43,13 +43,16 @@ namespace math{
 namespace operators{
 // =====================================================================================================================
 
+
 template <typename T, typename U>
 std::vector<std::common_type_t<T,U>> operator +(const std::vector<T>& a, const std::vector<U>& b)
 {
     size_t min_size = std::min(a.size(), b.size());
     std::vector<std::common_type_t<T,U>> result;
-    for (size_t i = 0; i < min_size; i++)
-        result.push_back(a[i] + b[i]);
+    result.reserve(min_size);
+    std::transform(a.begin(), a.begin()+min_size, b.begin(), std::back_inserter(result), [](const auto& x, const auto& y){
+        return x + y;});
+
     return result;
 }
 
@@ -57,8 +60,9 @@ template <typename T, typename U>
 std::vector<std::common_type_t<T,U>> operator +(const std::vector<T>& a, const U& b)
 {
     std::vector<std::common_type_t<T,U>> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(a[i] + b);
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [&b](const auto& x){
+        return x + b;});
     return result;
 }
 
@@ -66,8 +70,9 @@ template <typename T>
 std::vector<T> operator -(const std::vector<T>& a)
 {
     std::vector<T> result;
-    for (const auto& element : a)
-        result.push_back(-element);
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [](const auto& x){
+        return -x;});
     return result;
 }
 
@@ -82,8 +87,9 @@ std::vector<std::common_type_t<T,U>> operator *(const std::vector<T>& a, const s
 {
     size_t min_size = std::min(a.size(), b.size());
     std::vector<std::common_type_t<T,U>> result;
-    for (size_t i = 0; i < min_size; i++)
-        result.push_back(a[i] * b[i]);
+    result.reserve(min_size);
+    std::transform(a.begin(), a.begin()+min_size, b.begin(), std::back_inserter(result), [](const auto& x, const auto& y){
+        return x * y;});
     return result;
 }
 
@@ -91,8 +97,9 @@ template <typename T, typename U>
 std::vector<std::common_type_t<T,U>> operator *(const std::vector<T>& a, const U& b)
 {
     std::vector<std::common_type_t<T,U>> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(a[i] * b);
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [&b](const auto& x){
+        return x * b;});
     return result;
 }
 
@@ -101,372 +108,175 @@ std::vector<std::common_type_t<T,U>> operator /(const std::vector<T>& a, const s
 {
     size_t min_size = std::min(a.size(), b.size());
     std::vector<std::common_type_t<T,U>> result;
-    for (size_t i = 0; i < min_size; i++)
-        if(b[i] == 0)
-        {
-            return {};
-        }
-        else
-        {
-            result.push_back(a[i] / b[i]);
-        }
+    result.reserve(min_size);
+    std::transform(a.begin(), a.begin()+min_size, b.begin(), std::back_inserter(result), [](const auto& x, const auto& y){
+        return x / y;});
     return result;
 }
 
 template <typename T, typename U>
 std::vector<std::common_type_t<T,U>> operator /(const std::vector<T>& a, const U& b)
 {
-    if(b == 0)
-    {
-        return {};
-    }
     std::vector<std::common_type_t<T,U>> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(a[i] / b);
+    result.reserve(a.size());
+    std::transform(a.begin(), a.end(), std::back_inserter(result), [&b](const auto& x){
+        return x / b;});
     return result;
 }
 
 template <typename T>
-std::vector<T> sqrt(const std::vector<T>& a)
+std::vector<bool> operator ==(const std::vector<T>& a, const std::vector<T>& b)
 {
-    std::vector<T> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(std::sqrt(a[i]));
-    return result;
-}
+    std::vector<bool> result(a.size());
 
-template <typename T>
-std::vector<T> cos(const std::vector<T>& a)
-{
-    std::vector<T> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(std::cos(a[i]));
-    return result;
-}
-
-template <typename T>
-std::vector<T> sin(const std::vector<T>& a)
-{
-    std::vector<T> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(std::sin(a[i]));
-    return result;
-}
-
-template <typename T>
-std::vector<T> tan(const std::vector<T>& a)
-{
-    std::vector<T> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(std::tan(a[i]));
-    return result;
-}
-
-template <typename T>
-std::vector<T> acos(const std::vector<T>& a)
-{
-    std::vector<T> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(std::acos(a[i]));
-    return result;
-}
-
-template <typename T>
-std::vector<T> asin(const std::vector<T>& a)
-{
-    std::vector<T> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(std::asin(a[i]));
-    return result;
-}
-
-template <typename T>
-std::vector<T> atan(const std::vector<T>& a)
-{
-    std::vector<T> result;
-    for (size_t i = 0; i < a.size(); i++)
-        result.push_back(std::atan(a[i]));
-    return result;
-}
-
-template <typename T>
-std::vector<bool> operator ==(std::vector<T> v1, std::vector<T> v2)
-{
-    std::vector<bool> result;
-
-    if(v1.size() != v2.size())
+    if(a.size() != b.size())
     {
         std::cout<<"Invalid comparation, the vectors hasn't the same dimension"<<std::endl;
         return result;
     }
 
-    result.reserve(v1.size());
-
-    for(std::size_t i = 0; i < v1.size(); i++)
-    {
-        if(v1[i] == v2[i])
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(),b.begin(), result.begin(), [](const auto& x, const auto& y){
+        return x == y;});
     return result;
 }
 
 template <typename T, typename U>
-std::vector<bool> operator ==(std::vector<T> v, U l)
+std::vector<bool> operator ==(const std::vector<T>& a, const U& b)
 {
-    std::vector<bool> result;
-    result.reserve(v.size());
+    std::vector<bool> result(a.size());
 
-    for(std::size_t i = 0; i < v.size(); i++)
-    {
-        if(v[i] == l)
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(), result.begin(), [&b](const auto& x){
+        return x == b;});
     return result;
 }
 
 template <typename T>
-std::vector<bool> operator !=(std::vector<T> v1, std::vector<T> v2)
+std::vector<bool> operator !=(const std::vector<T>& a, const std::vector<T>& b)
 {
-    std::vector<bool> result;
+    std::vector<bool> result(a.size());
 
-    if(v1.size() != v2.size())
+    if(a.size() != b.size())
     {
         std::cout<<"Invalid comparation, the vectors hasn't the same dimension"<<std::endl;
         return result;
     }
 
-    result.reserve(v1.size());
-
-    for(std::size_t i = 0; i < v1.size(); i++)
-    {
-        if(v1[i] != v2[i])
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(),b.begin(), result.begin(), [](const auto& x, const auto& y){
+        return x != y;});
     return result;
 }
 
 template <typename T, typename U>
-std::vector<bool> operator !=(std::vector<T> v, U l)
+std::vector<bool> operator !=(const std::vector<T>& a, const U& b)
 {
-    std::vector<bool> result;
-    result.reserve(v.size());
+    std::vector<bool> result(a.size());
 
-    for(std::size_t i = 0; i < v.size(); i++)
-    {
-        if(v[i] != l)
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(), result.begin(), [&b](const auto& x){
+        return x != b;});
     return result;
 }
 
 template <typename T>
-    std::vector<bool> operator >(std::vector<T> v1, std::vector<T> v2)
+std::vector<bool> operator >(const std::vector<T>& a, const std::vector<T>& b)
 {
-    std::vector<bool> result;
+    std::vector<bool> result(a.size());
 
-    if(v1.size() != v2.size())
+    if(a.size() != b.size())
     {
         std::cout<<"Invalid comparation, the vectors hasn't the same dimension"<<std::endl;
         return result;
     }
 
-    result.reserve(v1.size());
-
-    for(std::size_t i = 0; i < v1.size(); i++)
-    {
-        if(v1[i] > v2[i])
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(),b.begin(), result.begin(), [](const auto& x, const auto& y){
+        return x > y;});
     return result;
 }
 
 template <typename T, typename U>
-std::vector<bool> operator >(std::vector<T> v, U l)
+std::vector<bool> operator >(const std::vector<T>& a, const U& b)
 {
-    std::vector<bool> result;
-    result.reserve(v.size());
+    std::vector<bool> result(a.size());
 
-    for(std::size_t i = 0; i < v.size(); i++)
-    {
-        if(v[i] > l)
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(), result.begin(), [&b](const auto& x){
+        return x > b;});
     return result;
 }
 
 template <typename T>
-std::vector<bool> operator <(std::vector<T> v1, std::vector<T> v2)
+std::vector<bool> operator <(const std::vector<T>& a, const std::vector<T>& b)
 {
-    std::vector<bool> result;
+    std::vector<bool> result(a.size());
 
-    if(v1.size() != v2.size())
+    if(a.size() != b.size())
     {
         std::cout<<"Invalid comparation, the vectors hasn't the same dimension"<<std::endl;
         return result;
     }
 
-    result.reserve(v1.size());
-
-    for(std::size_t i = 0; i < v1.size(); i++)
-    {
-        if(v1[i] < v2[i])
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(),b.begin(), result.begin(), [](const auto& x, const auto& y){
+        return x < y;});
     return result;
 }
 
 template <typename T, typename U>
-std::vector<bool> operator <(std::vector<T> v, U l)
+std::vector<bool> operator <(const std::vector<T>& a, const U& b)
 {
-    std::vector<bool> result;
-    result.reserve(v.size());
+    std::vector<bool> result(a.size());
 
-    for(std::size_t i = 0; i < v.size(); i++)
-    {
-        if(v[i] < l)
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(), result.begin(), [&b](const auto& x){
+        return x < b;});
     return result;
 }
 
 template <typename T>
-std::vector<bool> operator >=(std::vector<T> v1, std::vector<T> v2)
+std::vector<bool> operator >=(const std::vector<T>& a, const std::vector<T>& b)
 {
-    std::vector<bool> result;
+    std::vector<bool> result(a.size());
 
-    if(v1.size() != v2.size())
+    if(a.size() != b.size())
     {
         std::cout<<"Invalid comparation, the vectors hasn't the same dimension"<<std::endl;
         return result;
     }
 
-    result.reserve(v1.size());
-
-    for(std::size_t i = 0; i < v1.size(); i++)
-    {
-        if(v1[i] >= v2[i])
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(),b.begin(), result.begin(), [](const auto& x, const auto& y){
+        return x >= y;});
     return result;
 }
 
 template <typename T, typename U>
-std::vector<bool> operator >=(std::vector<T> v, U l)
+std::vector<bool> operator >=(const std::vector<T>& a, const U& b)
 {
-    std::vector<bool> result;
-    result.reserve(v.size());
+    std::vector<bool> result(a.size());
 
-    for(std::size_t i = 0; i < v.size(); i++)
-    {
-        if(v[i] >= l)
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(), result.begin(), [&b](const auto& x){
+        return x >= b;});
     return result;
 }
 
 template <typename T>
-std::vector<bool> operator <=(std::vector<T> v1, std::vector<T> v2)
+std::vector<bool> operator <=(const std::vector<T>& a, const std::vector<T>& b)
 {
-    std::vector<bool> result;
+    std::vector<bool> result(a.size());
 
-    if(v1.size() != v2.size())
+    if(a.size() != b.size())
     {
         std::cout<<"Invalid comparation, the vectors hasn't the same dimension"<<std::endl;
         return result;
     }
 
-    result.reserve(v1.size());
-
-    for(std::size_t i = 0; i < v1.size(); i++)
-    {
-        if(v1[i] <= v2[i])
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::transform(a.begin(), a.end(),b.begin(), result.begin(), [](const auto& x, const auto& y){
+        return x <= y;});
     return result;
 }
 
 template <typename T, typename U>
-std::vector<bool> operator <=(std::vector<T> v, U l)
+std::vector<bool> operator <=(const std::vector<T>& a, const U& b)
 {
-    std::vector<bool> result;
-    result.reserve(v.size());
-    for(std::size_t i = 0; i < v.size(); i++)
-    {
-        if(v[i] <= l)
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
+    std::vector<bool> result(a.size());
+
+    std::transform(a.begin(), a.end(), result.begin(), [&b](const auto& x){
+        return x <= b;});
     return result;
 }
 
@@ -477,20 +287,9 @@ std::vector<bool> operator &&(const std::vector<bool>& a, const std::vector<bool
         return {};
     }
 
-    std::vector<bool> result;
-    result.reserve(a.size());
-    for(std::size_t i = 0; i < a.size(); i++)
-    {
-        if(a[i] && b[i])
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
-
+    std::vector<bool> result(a.size());
+    std::transform(a.begin(),a.end(),b.begin(),result.begin(),[](const auto& a, const auto& b){
+        return a && b;});
     return result;
 }
 
@@ -501,20 +300,9 @@ std::vector<bool> operator ||(const std::vector<bool>& a, const std::vector<bool
         return {};
     }
 
-    std::vector<bool> result;
-    result.reserve(a.size());
-    for(std::size_t i = 0; i < a.size(); i++)
-    {
-        if(a[i] || b[i])
-        {
-            result.push_back(true);
-        }
-        else
-        {
-            result.push_back(false);
-        }
-    }
-
+    std::vector<bool> result(a.size());
+    std::transform(a.begin(),a.end(),b.begin(),result.begin(),[](const auto& a, const auto& b){
+        return a || b;});
     return result;
 }
 

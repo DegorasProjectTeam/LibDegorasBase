@@ -43,6 +43,18 @@
 #include "LibDegorasBase/Statistics/types/statistics_types.h"
 #include "LibDegorasBase/Mathematics/types/matrix.h"
 #include "LibDegorasBase/Mathematics/types/vector3d.h"
+#include "LibDegorasBase/Mathematics/operators/operators.h"
+#include "LibDegorasBase/Mathematics/utils/math_utils.h"
+#include<cmath>
+
+using dpbase::math::types::Matrix;
+using dpbase::math::operators::operator +;
+using dpbase::math::operators::operator -;
+using dpbase::math::operators::operator *;
+using dpbase::math::operators::operator /;
+using dpbase::math::abs;
+using dpbase::math::sqrt;
+using dpbase::math::exp;
 // =====================================================================================================================
 
 // DPBASE NAMESPACES
@@ -187,6 +199,28 @@ template <typename T>
 std::vector<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, const std::vector<T>& x_new);
 template <typename T>
 std::vector<T> linearInterpolation(const std::vector<T>& x,const std::vector<T>& y, const std::vector<T>& x_new, std::vector<T> fill_values);
+
+/**
+ * @brief Calculate the gauss bell distribution of the data.
+ * @param x The vector of points to evaluate.
+ * @param A The amplitude.
+ * @param mu The mean.
+ * @param sigma The standar desviation.
+ * @return A vector with the evaluation of x elements.
+ */
+template <typename T>
+std::vector<T> gaussModel(const std::vector<T>& x, T A, T mu, T sigma);
+
+/**
+ * @brief Calculate the parameters of the gauss model using to fit a curve.
+ * @param x The X axis values.
+ * @param y The initial aproximation of the curve values.
+ * @param p0 The initial parameters of the gauss model.
+ * @param max_iter, The maximun number of iterations, default value is 100.
+ * @return A vector with the parameters of gauss model using to fit the curve.
+ */
+template <typename T>
+std::vector<T> curve_fit_Gauss(const std::vector<T>& x, const std::vector<T>& y, const std::vector<T>& p0, std::size_t max_iter = 100);
 
 }} // END NAMESPACES.
 // =====================================================================================================================

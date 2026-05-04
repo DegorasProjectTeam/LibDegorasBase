@@ -4,8 +4,10 @@
 #include <chrono>
 
 #include <LibDegorasBase/Mathematics/types/matrix.h>
+#include <LibDegorasBase/Statistics/fitting.h>
 
 using dpbase::math::types::Matrix;
+using dpbase::stats::curve_fit_Gauss;
 
 void testMatrix()
 {

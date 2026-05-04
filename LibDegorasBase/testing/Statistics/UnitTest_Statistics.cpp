@@ -13,6 +13,7 @@ using dpbase::stats::measures::argmin;
 using dpbase::stats::measures::argsmax;
 using dpbase::stats::measures::argsmin;
 using dpbase::stats::linearInterpolation;
+using dpbase::stats::curve_fit_Gauss;
 
 void testStatisticsConvolve()
 {
@@ -289,6 +290,46 @@ void testStatisticsLinearInterpolation()
     std::cout<<"---------------------------------"<<std::endl;
 }
 
+void testStatisticsCurveFit()
+{
+    std::vector<long double> x = {-10.0, -9.0, -8.0, -7.0, -6.0, -5.0, -4.0, -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0};
+    std::vector<long double> y = {0.0504252,-0.14174905,0.10573461,0.17953944,-0.04436887,0.34102805,0.73885498,1.60817118,3.20333533,4.62499844,5.07713058,4.2815709,2.61021766,1.50749401,0.42242251,-0.02162359,0.26357685,-0.17115526,-0.06966581,-0.03306565,-0.04866315};
+    auto v = curve_fit_Gauss(x,y,{1,1,1});
+
+    std::cout<<"---------------------------------"<<std::endl;
+    std::cout<<"testStatisticsCurveFit"<<std::endl<<std::endl;
+    std::cout<<"Test vectors are:"<<std::endl<<std::endl;
+    std::cout<<"x = [";
+    for(std::size_t i = 0; i < x.size()-1; i++)
+    {
+        std::cout<<x[i]<<", ";
+    }
+    std::cout<<x[x.size()-1]<<"]"<<std::endl<<std::endl;
+    std::cout<<"y = [";
+    for(std::size_t i = 0; i < y.size()-1; i++)
+    {
+        std::cout<<y[i]<<", ";
+    }
+    std::cout<<y[y.size()-1]<<"]"<<std::endl<<std::endl;
+
+    std::cout<<"Test parameters are:"<<std::endl<<std::endl;
+    std::cout<<"Amplitudo = 1"<<std::endl<<std::endl;
+    std::cout<<"mu = 1"<<std::endl<<std::endl;
+    std::cout<<"sigma = 1"<<std::endl<<std::endl;
+
+    std::cout<<"The real fit parameters are:"<<std::endl<<std::endl;
+    std::cout<<"Amplitudo = 5.08594"<<std::endl<<std::endl;
+    std::cout<<"mu = -0.147484"<<std::endl<<std::endl;
+    std::cout<<"sigma = 1.92332"<<std::endl<<std::endl;
+
+    std::cout<<"The calculated fit parameters are:"<<std::endl<<std::endl;
+    std::cout<<"Amplitudo = "<<v[0]<<std::endl<<std::endl;
+    std::cout<<"mu = "<<v[1]<<std::endl<<std::endl;
+    std::cout<<"sigma = "<<v[2]<<std::endl<<std::endl;
+
+    std::cout<<"---------------------------------"<<std::endl;
+}
+
 int main()
 {
     std::cout << "Unit Test: dpbase::math::Statistics" << std::endl;
@@ -297,6 +338,7 @@ int main()
     testStatisticsConvolve();
     testStatisticsArguments();
     testStatisticsLinearInterpolation();
+    testStatisticsCurveFit();
     //prueba();
 
     // All assertions passed

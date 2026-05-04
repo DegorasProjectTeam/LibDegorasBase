@@ -130,13 +130,6 @@ template<typename T>
 std::string numberToMaxDecStr(const T& x);
 
 /**
- * @brief Separate the string words by words.
- * @param line The string to separate.
- * @return The splited string.
- */
-std::vector<std::string> split(const std::string& line);
-
-/**
  * @brief Copy the string without the first and last space.
  * @param line The string.
  * @return The string without the first and last space.
