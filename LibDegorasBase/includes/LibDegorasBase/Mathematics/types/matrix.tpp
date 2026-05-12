@@ -657,11 +657,11 @@ long double Matrix<T>::norm1() const
     Matrix<T> A = *this;
     // Initialize the value of the norm
     long double n = 0;
-    for(std::size_t i=0; i<A.rowSize(); i++)
+    for(std::size_t j=0; j<A.columnsSize(); j++)
     {
         // Perform the calculation of sumatory
         long double sum_col = 0;
-        for(std::size_t j=0; j<A.columnsSize(); j++)
+        for(std::size_t i=0; i<A.rowSize(); i++)
         {
             sum_col += std::abs(A[i][j]);
         }

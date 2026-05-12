@@ -2223,8 +2223,8 @@ void testMatrixIndefinite()
 
 void testMatrixNorm1()
 {
-    Matrix<long double> matrixp({{-4,3,-2,1},{3,-3,2,-1},{-2,-2,-2,1},{1,1,1,1}});
-
+    // Matrix<long double> matrixp({{-4,3,-2,1},{3,-3,2,-1},{-2,-2,-2,1},{1,1,1,1}});
+    Matrix<long double> matrixp({{-3,5,7},{2,6,4},{0,2,8}});
     std::cout<<"---------------------------------"<<std::endl;
     std::cout<<"testMatrixNorm1"<<std::endl<<std::endl;
     std::cout<<"Test matrix is:"<<std::endl<<std::endl;
