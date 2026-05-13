@@ -2232,7 +2232,7 @@ void testMatrixNorm1()
 
     float resultado = matrixp.norm1();
 
-    std::cout<<"The value of norm 1 of the matrix is 10"<<std::endl<<std::endl;
+    std::cout<<"The value of norm 1 of the matrix is 19"<<std::endl<<std::endl;
 
     std::cout<<"The result of norm1 function is: "<< resultado <<std::endl<<std::endl;
     std::cout<<"---------------------------------"<<std::endl;
